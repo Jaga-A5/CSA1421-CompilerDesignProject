@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VulnX - AI-Driven Code Intelligence Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="wave-container">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>VulnX</h1>
+                <p class="subtitle">AI-Driven Code Intelligence Platform for Vulnerability Detection and Secure Code Optimization</p>
+            </div>
+            <div class="header-nav">
+                <button class="nav-btn active" data-tab="analyze">Analyze</button>
+                <button class="nav-btn" data-tab="dashboard">Dashboard</button>
+                <button class="nav-btn" data-tab="reports">Reports</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Analyze Tab -->
+            <div id="analyze-tab" class="tab-content active">
+                <div class="input-section">
+                    <div class="section-header">
+                        <h2>Source Code Input</h2>
+                        <div class="input-controls">
+                            <input type="text" id="file-name" placeholder="File name (optional)">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="use-ai">
+                                <span>Use AI Suggestions</span>
+                            </label>
+                        </div>
+                    </div>
+                    <textarea id="code-input" placeholder="Paste your source code here for analysis..."></textarea>
+                    <div class="button-group">
+                        <button id="analyze-btn" class="btn btn-primary">Analyze Code</button>
+                        <button id="clear-btn" class="btn btn-secondary">Clear</button>
+                        <button id="load-sample-btn" class="btn btn-tertiary">Load Sample</button>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results-section" class="results-section hidden">
+                    <div class="section-header">
+                        <h2>Analysis Results</h2>
+                        <div class="score-display">
+                            <span class="score-label">Security Score:</span>
+                            <span id="security-score" class="score-value">--</span>
+                        </div>
+                    </div>
+
+                    <!-- Modules Results -->
+                    <div class="modules-grid">
+                        <!-- Module 1: Lexical Analysis -->
+                        <div class="module-card">
+                            <div class="module-header">
+                                <h3>Module 1: Lexical Analysis</h3>
+                                <span class="module-status">Complete</span>
+                            </div>
+                            <div class="module-content">
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Total Tokens</span>
+                                        <span id="total-tokens" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Keywords</span>
+                                        <span id="keyword-count" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Identifiers</span>
+                                        <span id="identifier-count" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Operators</span>
+                                        <span id="operator-count" class="stat-value">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Module 2: Syntax Analysis -->
+                        <div class="module-card">
+                            <div class="module-header">
+                                <h3>Module 2: Syntax Analysis & AST</h3>
+                                <span class="module-status">Complete</span>
+                            </div>
+                            <div class="module-content">
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Total Nodes</span>
+                                        <span id="total-nodes" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Functions</span>
+                                        <span id="function-count" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Classes</span>
+                                        <span id="class-count" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Max Depth</span>
+                                        <span id="max-depth" class="stat-value">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Module 3: Vulnerability Detection -->
+                        <div class="module-card full-width">
+                            <div class="module-header">
+                                <h3>Module 3: Vulnerability Detection</h3>
+                                <span id="vuln-status" class="module-status">Complete</span>
+                            </div>
+                            <div class="module-content">
+                                <div class="vulnerability-summary">
+                                    <div class="vuln-stat critical">
+                                        <span class="vuln-label">Critical</span>
+                                        <span id="critical-count" class="vuln-value">0</span>
+                                    </div>
+                                    <div class="vuln-stat high">
+                                        <span class="vuln-label">High</span>
+                                        <span id="high-count" class="vuln-value">0</span>
+                                    </div>
+                                    <div class="vuln-stat medium">
+                                        <span class="vuln-label">Medium</span>
+                                        <span id="medium-count" class="vuln-value">0</span>
+                                    </div>
+                                    <div class="vuln-stat low">
+                                        <span class="vuln-label">Low</span>
+                                        <span id="low-count" class="vuln-value">0</span>
+                                    </div>
+                                </div>
+                                <div id="vulnerabilities-list" class="vulnerabilities-list"></div>
+                            </div>
+                        </div>
+
+                        <!-- Module 4: Code Optimization -->
+                        <div class="module-card full-width">
+                            <div class="module-header">
+                                <h3>Module 4: Code Optimization</h3>
+                                <span class="module-status">Complete</span>
+                            </div>
+                            <div class="module-content">
+                                <div id="optimizations-list" class="optimizations-list"></div>
+                            </div>
+                        </div>
+
+                        <!-- Module 5: Security Report -->
+                        <div class="module-card full-width">
+                            <div class="module-header">
+                                <h3>Module 5: Security Report</h3>
+                                <span class="module-status">Complete</span>
+                            </div>
+                            <div class="module-content">
+                                <div class="report-actions">
+                                    <button id="export-json" class="btn btn-sm">Export JSON</button>
+                                    <button id="export-html" class="btn btn-sm">Export HTML</button>
+                                    <button id="export-md" class="btn btn-sm">Export Markdown</button>
+                                </div>
+                                <div id="recommendations-list" class="recommendations-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content">
+                <div class="dashboard-container">
+                    <h2>Security Dashboard</h2>
+                    <div class="dashboard-stats">
+                        <div class="dashboard-card">
+                            <h3>Total Reports</h3>
+                            <p id="dash-total-reports" class="dashboard-value">0</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Avg Security Score</h3>
+                            <p id="dash-avg-score" class="dashboard-value">--</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Total Vulnerabilities</h3>
+                            <p id="dash-total-vulns" class="dashboard-value">0</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Total Optimizations</h3>
+                            <p id="dash-total-opts" class="dashboard-value">0</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-charts">
+                        <div class="chart-card">
+                            <h3>Severity Distribution</h3>
+                            <div id="severity-chart" class="chart-placeholder"></div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Vulnerability Types</h3>
+                            <div id="type-chart" class="chart-placeholder"></div>
+                        </div>
+                    </div>
+                    <div class="recent-reports">
+                        <h3>Recent Reports</h3>
+                        <div id="recent-reports-list" class="reports-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="tab-content">
+                <div class="reports-container">
+                    <h2>Security Reports</h2>
+                    <div id="all-reports-list" class="reports-list"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>VulnX - AI-Driven Code Intelligence Platform</p>
+            <p>Compiler Design Project</p>
+        </footer>
+    </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <p>Analyzing code...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

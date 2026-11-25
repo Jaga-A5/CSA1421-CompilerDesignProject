@@ -65,6 +65,7 @@ class UserHandler:
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     loadDashboard();
+    loadReports();
 });
 
 // Setup event listeners
@@ -97,6 +98,8 @@ function switchTab(tabName) {
     
     if (tabName === 'dashboard') {
         loadDashboard();
+    } else if (tabName === 'reports') {
+        loadReports();
     }
 }
 
@@ -129,6 +132,8 @@ async function analyzeCode() {
         if (data.success) {
             currentAnalysis = data.analysis;
             displayResults(data.analysis);
+            loadDashboard();
+            loadReports();
         } else {
             alert('Analysis failed: ' + data.error);
         }
@@ -319,6 +324,45 @@ function displayDashboard(dashboard) {
         `).join('');
     } else {
         recentReportsList.innerHTML = '<p style="text-align: center; color: #999;">No reports yet</p>';
+    }
+}
+
+// Load reports for Reports tab
+async function loadReports() {
+    try {
+        const response = await fetch(`${API_BASE}/reports`);
+        const data = await response.json();
+        if (data.success) {
+            displayReports(data.reports);
+        }
+    } catch (error) {
+        console.error('Error loading reports:', error);
+    }
+}
+
+// Display reports in Reports tab
+function displayReports(reports) {
+    const allReportsList = document.getElementById('all-reports-list');
+    if (!allReportsList) return;
+    
+    if (reports && reports.length > 0) {
+        allReportsList.innerHTML = reports.map(report => `
+            <div class="report-item">
+                <div class="report-info">
+                    <h4>${escapeHtml(report.file_name || 'untitled.py')}</h4>
+                    <p>${new Date(report.timestamp).toLocaleString()}</p>
+                    <p style="margin-top: 6px; font-size: 0.85rem; color: #8892b0;">
+                        Vulnerabilities: <strong>${report.vulnerabilities ? report.vulnerabilities.length : 0}</strong> &nbsp;|&nbsp; 
+                        Optimizations: <strong>${report.optimizations ? report.optimizations.length : 0}</strong>
+                    </p>
+                </div>
+                <div class="report-score ${report.security_score >= 80 ? 'high' : report.security_score >= 50 ? 'medium' : 'low'}">
+                    ${report.security_score}
+                </div>
+            </div>
+        `).join('');
+    } else {
+        allReportsList.innerHTML = '<p style="text-align: center; color: #8892b0; padding: 20px;">No reports yet. Run an analysis on the Analyze tab to generate reports!</p>';
     }
 }
 

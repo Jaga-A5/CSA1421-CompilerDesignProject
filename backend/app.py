@@ -24,6 +24,37 @@ CORS(app)
 # Global report generator for dashboard
 report_generator = ReportGenerator()
 
+# Seed initial report with sample code so dashboard & reports tabs are populated on launch
+try:
+    _sample_code = """import hashlib
+import random
+
+def process_user_input(user_data):
+    query = "SELECT * FROM users WHERE name = '" + user_data + "'"
+    cursor.execute(query)
+    password = "admin123"
+    hash_value = hashlib.md5(user_data.encode()).hexdigest()
+    session_id = random.random()
+    return hash_value
+"""
+    _s_tokens, _s_tstats = tokenize_code(_sample_code)
+    _s_ast, _s_astats = build_ast_from_tokens(_s_tokens)
+    _s_vulns, _s_vsum, _s_score = analyze_vulnerabilities(_sample_code, _s_tokens, _s_ast)
+    _s_opts, _s_osum, _ = optimize_code(_sample_code, _s_vulns)
+    report_generator.generate_report(
+        source_code=_sample_code,
+        file_name="sample_analysis.py",
+        vulnerabilities=_s_vulns,
+        vulnerability_summary=_s_vsum,
+        security_score=_s_score,
+        optimizations=_s_opts,
+        optimization_summary=_s_osum,
+        token_stats=_s_tstats,
+        ast_stats=_s_astats
+    )
+except Exception as _e:
+    print(f"Initial sample report seed warning: {_e}")
+
 
 @app.route('/')
 def index():
@@ -67,7 +98,7 @@ def analyze_code():
     )
     
     # Module 5: Security Report Generation
-    report = generate_security_report(
+    report = report_generator.generate_report(
         source_code=source_code,
         file_name=file_name,
         vulnerabilities=vulnerabilities,
@@ -184,7 +215,7 @@ def report_endpoint():
     optimizations, optimization_summary, _ = optimize_code(source_code, vulnerabilities)
     
     # Generate report
-    report = generate_security_report(
+    report = report_generator.generate_report(
         source_code=source_code,
         file_name=file_name,
         vulnerabilities=vulnerabilities,
@@ -223,6 +254,17 @@ def dashboard_endpoint():
     return jsonify({
         'success': True,
         'dashboard': dashboard_data
+    })
+
+
+@app.route('/api/reports', methods=['GET'])
+@handle_errors
+def get_reports_endpoint():
+    """Get all security reports"""
+    reports = [r.to_dict() for r in reversed(report_generator.reports)]
+    return jsonify({
+        'success': True,
+        'reports': reports
     })
 
 

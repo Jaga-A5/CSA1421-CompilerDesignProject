@@ -1,7 +1,9 @@
 // VulnX Frontend JavaScript
 
-// API Base URL
-const API_BASE = 'http://localhost:5000/api';
+// API Base URL - use relative path in production or fallback to localhost if opened directly as a file
+const API_BASE = window.location.protocol === 'file:' 
+    ? 'http://localhost:5000/api' 
+    : '/api';
 
 // DOM Elements
 const codeInput = document.getElementById('code-input');
